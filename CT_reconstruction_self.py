@@ -20,7 +20,7 @@ def radon_transform(image, theta):
         projections.append(projection) 
     return np.array(projections)
 
-def inverse_radon_transform(sinogram, theta, size,filter_f):
+def inverse_radon_transform(sinogram, theta, size,filter):
     num_projections, num_detectors = sinogram.shape
     reconstruction = np.zeros((size, size))
     center = size // 2 # backprojection from the image center
@@ -30,7 +30,10 @@ def inverse_radon_transform(sinogram, theta, size,filter_f):
     for i in range(len(theta)):
         projection = sinogram[i, :]
         projection_fft = fft(projection) #Fourier transform
-        if(filter_f):
+        if(filter==0):
+            filtered_projection=np.real(projection)# no filter
+        elif(filter==1):
+            #filter in frequency domain
             filtered_projection = np.real(ifft(projection_fft * ramp_filter)) # multiply by filter、inverse Fourier transform
         else:
             #filter in spatial domain
@@ -49,24 +52,27 @@ def inverse_radon_transform(sinogram, theta, size,filter_f):
                     reconstruction[x, y] += filtered_projection[t_idx]
     return reconstruction
 
-# 主程式
+
 img = rgb2gray(imread("./image.jpg"))
 img_resized = resize(img, (512, 512))
 theta_03 = np.arange(0., 180., .3)
 sinogram_03 = radon_transform(img_resized, theta_03)
-f_reconstruction_03 = inverse_radon_transform(sinogram_03, theta_03, size=512,filter_f=True)
-s_reconstruction_03 = inverse_radon_transform(sinogram_03, theta_03, size=512,filter_f=False)
+n_reconstruction_03 = inverse_radon_transform(sinogram_03, theta_03, size=512,filter=0)
+f_reconstruction_03 = inverse_radon_transform(sinogram_03, theta_03, size=512,filter=1)
+s_reconstruction_03 = inverse_radon_transform(sinogram_03, theta_03, size=512,filter=2)
 
 theta_3 = np.arange(0., 180.,3)
 sinogram_3 = radon_transform(img_resized, theta_3)
-f_reconstruction_3 = inverse_radon_transform(sinogram_3, theta_3, size=512,filter_f=True)
-s_reconstruction_3 = inverse_radon_transform(sinogram_3, theta_3, size=512,filter_f=False)
+n_reconstruction_3 = inverse_radon_transform(sinogram_3, theta_3, size=512,filter=0)
+f_reconstruction_3 = inverse_radon_transform(sinogram_3, theta_3, size=512,filter=1)
+s_reconstruction_3 = inverse_radon_transform(sinogram_3, theta_3, size=512,filter=2)
 # 顯示結果
 fig, axs = plt.subplots(2, 4, figsize=(15, 5))
 axs[0,0].imshow(img_resized, cmap='gray')
 axs[0,0].set_title('Original Image')
-axs[0,1].imshow(sinogram_3.T, cmap='gray', aspect='auto')
-axs[0,1].set_title('Sinogram 3')
+#axs[0,1].imshow(sinogram_3.T, cmap='gray', aspect='auto')
+axs[0,1].imshow(n_reconstruction_3, cmap='gray')
+axs[0,1].set_title('Reconstructed Image 3(without filter)')
 axs[0,2].imshow(f_reconstruction_3, cmap='gray')
 axs[0,2].set_title('Reconstructed Image 3_frequency domain')
 axs[0,3].imshow(s_reconstruction_3, cmap='gray')
@@ -74,11 +80,12 @@ axs[0,3].set_title('Reconstructed Image 3_spatial domain')
 
 axs[1,0].imshow(img_resized, cmap='gray')
 axs[1,0].set_title('Original Image')
-axs[1,1].imshow(sinogram_03.T, cmap='gray', aspect='auto')
-axs[1,1].set_title('Sinogram 03')
+#axs[1,1].imshow(sinogram_03.T, cmap='gray', aspect='auto')
+axs[1,1].imshow(n_reconstruction_03, cmap='gray')
+axs[1,1].set_title('Reconstructed Image 0.3(without filter)')
 axs[1,2].imshow(f_reconstruction_03, cmap='gray')
-axs[1,2].set_title('Reconstructed Image 03_frequency domain')
+axs[1,2].set_title('Reconstructed Image 0.3_frequency domain')
 axs[1,3].imshow(s_reconstruction_03, cmap='gray')
-axs[1,3].set_title('Reconstructed Image 03_spatial domain')
+axs[1,3].set_title('Reconstructed Image 0.3_spatial domain')
 plt.tight_layout()
 plt.show()

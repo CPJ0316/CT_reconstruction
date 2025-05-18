@@ -31,7 +31,7 @@ subplot(2, 4, 2);
 imagesc(theta_3,xp_3,R_3);
 xlabel('Angle (degrees)');
 ylabel('Sensor Position');
-title('Sinogram3');
+title('Sinogram 3');
 colormap gray;
 colorbar;
 % right image
@@ -39,7 +39,7 @@ subplot(2, 4, 6);
 imagesc(theta_03,xp_03,R_03);
 xlabel('Angle (degrees)');
 ylabel('Sensor Position');
-title('Sinogram03');
+title('Sinogram 0.3');
 colormap gray;
 colorbar;
 
@@ -50,21 +50,21 @@ recon_unfiltered_03 = iradon(R_03, theta_03, 'linear', 'none');
 % left image
 subplot(2, 4, 3);
 imshow(recon_unfiltered_3, []);
-title('Sinogram3');
+title('Sinogram 3');
 % right image
 subplot(2, 4, 7);
 imshow(recon_unfiltered_03, []);
-title('Sinogram03');
+title('Sinogram 0.3');
 
 % back-projection
-recon_filtered_3 = iradon(R_3, theta_3, 'linear', 'Ram-Lak');  % 'none' = no filter
+recon_filtered_3 = iradon(R_3, theta_3, 'linear', 'Ram-Lak');  
 recon_filtered_03 = iradon(R_03, theta_03, 'linear', 'Ram-Lak');
 
 % left image
 subplot(2, 4, 4);
 imshow(recon_filtered_3, []);
-title('Sinogram3 filtered');
+title('Sinogram 3 filtered');
 % right image
 subplot(2, 4, 8);
 imshow(recon_filtered_03, []);
-title('Sinogram03 filtered');
+title('Sinogram 0.3 filtered');
