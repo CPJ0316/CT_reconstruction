@@ -11,7 +11,7 @@
   - 有使用 filter的影像會比沒有使用 filter的影像更為清楚，高頻更加明顯，畫面的整體輪廓也更清晰 。
 <img width="1199" height="601" alt="image" src="https://github.com/user-attachments/assets/6c732fd2-fb38-40b3-8f0b-1d03b3a27c9f" />
 
--使用matlab的function、python實作的結果比較
+- 使用matlab的function、python實作的結果比較
   - 重建品質為 Matlab 的更勝一籌，且以執行時間來看， 相比使用Matlab library的 function，自行撰寫的code顯然需要耗費好幾倍的時間。 推測除了語言不同的原因之外也可能是因
 為 library的 function 有進行一定程度的優化 。
 <img width="1295" height="407" alt="image" src="https://github.com/user-attachments/assets/4bf518c1-e9d2-4d9f-b35b-fb977aeb365f" />
